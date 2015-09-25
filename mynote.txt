@@ -2,3 +2,4 @@ git学习   网址www.liaoxuefeng.com
 git学习的新网址：git-scm.com/book/zh/v2
 需要做的事：
 1）Bug分支只是看了，还没有实践，需要进行实践
+2）远程仓库的操作还需要实践。
