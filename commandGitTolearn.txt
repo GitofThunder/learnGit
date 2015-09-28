@@ -1,4 +1,57 @@
+初始化相关的指令：
 git init //在当前目录下输入，即可将当前目录初始化为一个Git仓库
+
 git clone [url] //克隆远端git仓库的代码
+
+
+提交相关的指令
 git status
+
 git add   //改命令使用文件或目录的路径作为参数；如果参数是目录的路径，该命令将递归的跟踪该目录下的所有文件
+
+git diff //不加参数时，可以查看尚未暂存的文件更新了那些部分
+git diff --staged  //可以查看已暂存的将要添加到下次提交里的内容更新了哪些部分
+git difftool  //可以使用工具来查看文件的变化
+git gittoool --tool-help  //可以用来查看你的系统支持哪些Git Diff插件
+
+git commit //提交命令,此时会启动默认的文本编辑器以便输入本次的提交说明
+git commit -v //默认的提交消息包含最后一次运行git status的输出，以便你想起这次更新的内容有哪些，而加上-v选项之后可以知道更详细的修改内容的提示
+git commit -m
+git commit -a  //Git会自动把所有已经跟踪过的文件暂存起来一并提交，从而跳过git add步骤
+
+
+删除相关的指令
+git rm //从文件清单中移除某个文件
+git rm -f  //删除前修改过并且已经放到暂存区域的话，则必须用强制删除选项-f进行删除（经过测试没有找到这个语句的使用场景）
+git rm --cached <filename> //当我们想把文件从Git仓库中删除，但仍希望保留在当前工作目录中。换句话就是，想让文件保留在磁盘，但是并不想让Git继续跟踪。此时可以使用--cached（情况：当忘记添加。gitignore文件，不小心把一个很大的日志文件或一堆。a这样的编译生成文件添加到暂存区时，这种做法尤为有效）
+git rm log/\*.log 注意到星号 * 之前的反斜杠 \， 因为 Git 有它自己的文件模式扩展匹配方式，所以我们不用 shell 来帮忙展开。 此命令删除 log/ 目录下扩展名为 .log 的所有文件。 类似的比如：git rm \*~ 该命令为删除以~结尾的所有文件
+
+git mv file_from file_to //Git中对文件进行改名。使用此条语句需要注意，不需要提前在工作目录下使用mv指令（若在工作目录下使用mv指令，Git会把这次操作识别为add file_to和rm file_from），只需要直接使用git mv指令即可，工作目录下的文件名会自动修改为file_to
+
+
+查看提交历史相关的指令
+git log  //显示更新信息
+git log -p //用来显示每次提交的内容的差异。（你也可以加上-2来仅显示最近的两次提交）
+git log --stat //可以显示每次提交的简略的统计信息
+git log --pretty=<style>  //pretty选项可以指定使用不同于默认格式的方式展示提交历史。style有online（将每个提交放在一行显示，查看提交数很大时非常有用）；short；full；fuller；format（可以定制自己的显示格式，如：git log --pretty=format:"%h - %an, %ar : %s"；格式占位符写法及代表意义可参见网址：https://git-scm.com/book/zh/v2/Git-基础-查看提交历史）。
+git log --graph //--graph选项添加了一些ASCII字符串来形象的展示你的分支、合并历史
+git log的其他细节问题均可参见 https://git-scm.com/book/zh/v2/Git-基础-查看提交历史
+
+
+撤销操作相关的指令
+git commit --amend  //重新提交（有时我们提交完了才发现漏掉几个文件没有添加，或者提交的信息写错了，此时可以使用此条语句）
+
+
+远程仓库操作相关指令
+git remote (-v)  //查看远程仓库
+git remote add <shortname> <url>   //添加一个远程仓库
+
+git fetch <remote-name>   //从远程仓库中获取数据
+
+git push [remote-name] [branch-name]   //推送到远程仓库
+
+git remote show [remote-name]  //查看远程仓库
+
+git remote rename [origin-name] [after-name]   //重命名远程仓库（值得注意的是这同样也会修改你远程分支的名字。哪些过去引用origin-name/master的现在会引用after-name/master）
+
+git remote rm [repository-name]   //删除远程仓库
