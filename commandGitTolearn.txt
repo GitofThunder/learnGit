@@ -44,7 +44,8 @@ git commit --amend  //重新提交（有时我们提交完了才发现漏掉几�
 
 远程仓库操作相关指令
 git remote (-v)  //查看远程仓库
-git remote add <shortname> <url>   //添加一个远程仓库
+
+git remote add <shortname> <url>   //添加一个远程仓库（eg:git remote add pd http://github.com/paulboone/ticgit）
 
 git fetch <remote-name>   //从远程仓库中获取数据
 
