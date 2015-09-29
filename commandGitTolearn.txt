@@ -1,3 +1,7 @@
+需要解决的疑惑：
+git clone 和 git remote add 之间的区别
+
+
 初始化相关的指令：
 git init //在当前目录下输入，即可将当前目录初始化为一个Git仓库
 
@@ -47,7 +51,7 @@ git remote (-v)  //查看远程仓库
 
 git remote add <shortname> <url>   //添加一个远程仓库（eg:git remote add pd http://github.com/paulboone/ticgit）
 
-git fetch <remote-name>   //从远程仓库中获取数据
+git fetch <remote-name>   //从远程仓库中获取数据（目的是获取远程仓库中有，而本地没有的情况。其不会自动合并或修改你当前的工作，当准备好时，需要手动将其并入自己的工作）
 
 git push [remote-name] [branch-name]   //推送到远程仓库
 
@@ -56,3 +60,65 @@ git remote show [remote-name]  //查看远程仓库
 git remote rename [origin-name] [after-name]   //重命名远程仓库（值得注意的是这同样也会修改你远程分支的名字。哪些过去引用origin-name/master的现在会引用after-name/master）
 
 git remote rm [repository-name]   //删除远程仓库
+
+
+打标签的相关指令
+git tag  //列出已有的标签
+git tag -l "name"  //特定模式查找标签（查找与name相关的标签）
+
+git tag -a   //创建附注标签
+
+注意：
+在 Git 中你并不能真的检出一个标签，因为它们并不能像分支一样来回移动。 如果你想要工作目录与仓库中特定的标签版本完全一样，可以使用 git checkout -b [branchname] [tagname] 在特定的标签上创建一个新分支：
+
+git checkout -b version2 v2.0.0
+Switched to a new branch 'version2'
+
+当然，如果在这之后又进行了一次提交，version2 分支会因为改动向前移动了，那么 version2 分支就会和 v2.0.0 标签稍微有些不同，这时就应该当心了。
+
+
+Git分支
+git branch [branch-name]  //创建分支
+
+git log --decorate  //查看当前分支所指向的对象
+
+git merge   //合并分支
+
+git branch -d [branch-name]   //删除分支
+
+git push origin :[branch-name]   //可以删除远端仓库的分支
+
+git mergetool   //可以启动一个合适的可视化工具以解决合并问题
+
+git mergetool --tool-help    //可以显示系统支持的可视化工具有哪些
+
+git branch -v     //可以用来查看每一个分支的最后一次提交
+
+git branch --merged     //可以显示所有分支中已经合并到当前分支的分支。在这条指令下显示的分支（除去当前分支）均可以被删除，因为，分支的内容已经被合并进了当前分支
+git branch --no-merged  //显示未进行合并工作的分支
+
+
+Git分支开发工作流（比较重要，涉及利用Git的工作方式）
+http://git-scm.com/book/zh/v2/Git-分支-分支开发工作流
+
+git push [remote-name] [branch-name]   //将本地的某个分支推送到远程仓库
+
+git push origin [本地的分支名称a]:[远程仓库的分支名字b]  //将本地的分支a推送到远程仓库的分支b（注意：之前写过删除远程仓库分支的语句git push :dev,这个原理就是本地的分支为无，将无推动给远程也就是删除远程）
+git push origin --delete [branch-name]    //删除远程仓库的分支
+
+git branch -vv   //可以查看设置的所有跟踪分支（与远程仓库有关）
+
+git pull   //相当于git fetch紧接着git merge，由于git pull 的魔法经常令人困惑所以通常单独显式地使用 fetch 与 merge 命令会更好一些。（注意：当 git fetch 命令从服务器上抓取本地没有的数据时，它并不会修改工作目录中的内容。 它只会获取数据然后让你自己合并。）
+
+
+Git分支--变基（Git的另一种合并方式)
+git rebase --onto master server client  //命令的意思是：“取出 client 分支，找出处于 client 分支和 server 分支的共同祖先之后的修改，然后把它们在 master 分支上重演一遍”。
+
+git rebase [basebranch-name] [topicbranch]   //命令可以直接将特性分支（即本例中的 server）变基到目标分支（即 master）上。这样做能省去你先切换到 server 分支，再对其执行变基命令的多个步骤。
+
+变基的使用准则：不要对在你的仓库外有副本的分支执行变基。
+
+
+
+服务器上的Git--协议
+
