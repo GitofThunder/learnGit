@@ -2,3 +2,13 @@
 http://www.cocoachina.com/cocos/20140422/8215.html  三消类游戏的例子
 ihttp://blog.csdn.net/cbbbc/article/details/38435851  浅析schedule和回调函数
 http://www.cocoachina.com/bbs/read.php?tid-221969-keyword-%CE%EF%C0%ED%D2%FD%C7%E6.html  物理引擎简介，里面介绍的内容初级，但是实用
+
+问题：
+1）像素碰撞检测
+资料1：https://www.baidu.com/s?wd=cocos2%E4%B8%9C%E8%A5%BF%E5%83%8F%E7%B4%A0%E7%A2%B0%E6%92%9E&pn=10&oq=cocos2%E4%B8%9C%E8%A5%BF%E5%83%8F%E7%B4%A0%E7%A2%B0%E6%92%9E&ie=utf-8&rsv_pq=92ad631c00005acb&rsv_t=58eawuS8uiI3Bk1XVCWIBOiyDdotJ1YDdIS3xF4T%2BPncvgSxrQPeJ%2FVKq6I 看标题是支持3.x的像素碰撞检测，内容很乱，还没细看
+
+2）有限状态机（特别重要）
+http://blog.csdn.net/hackmind/article/details/40370599  一个还可以的例子，面向对象的代码还没有看
+http://blog.csdn.net/tspangle/article/details/38734147  一个很不错的fsm实现方案
+
+http://blog.csdn.net/xtxy/article/details/9668221    堆栈式的状态机
