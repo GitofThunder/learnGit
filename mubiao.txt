@@ -1,3 +1,4 @@
 在年底自已做出一个横版的rpg游戏（包括服务器相关的东西也需要搭建）
 http://www.cocoachina.com/cocos/20140422/8215.html  三消类游戏的例子
 ihttp://blog.csdn.net/cbbbc/article/details/38435851  浅析schedule和回调函数
+http://www.cocoachina.com/bbs/read.php?tid-221969-keyword-%CE%EF%C0%ED%D2%FD%C7%E6.html  物理引擎简介，里面介绍的内容初级，但是实用
