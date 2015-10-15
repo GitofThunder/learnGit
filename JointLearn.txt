@@ -1,0 +1,126 @@
+1）JointPin：
+
+CPP中的描述：
+@brief A pin joint allows the two bodies to independently rotate around the anchor point as if pinned together.
+
+两个连接连接在关节上的两个物理body可以各自独立的绕着joint进行旋转，joint和body之间的连接属于刚体表现（无伸缩性）。
+
+问题：
+JointPin有一个构造函数的作用没有搞懂，构造函数如下：
+static PhysicsJointPin* construct(PhysicsBody* a, PhysicsBody* b, const Vec2& anchr1, const Vec2& anchr2);
+其中，后面两个参数在CPP文件中的描述是
+	@param anchr1 Anchr1 is the anchor point on body a.
+	@param anchr2 Anchr2 is the anchor point on body b.
+本以为会有两个joint，然而测试的结果并不是，目前没有测试出结果，作用不明。
+
+
+2）JointFixed
+
+CPP中的描述：
+@brief A fixed joint fuses the two bodies together at a reference point. Fixed joints are useful for creating complex shapes that can be broken apart later.
+
+这个joint最简单，就是将两个body以刚性的方式连接起来。
+
+3）JointDistance
+
+CPP中的描述：
+Set the fixed distance with two bodies
+
+表现形式基本与JointFixed相似，但是关键在于JointFixed只有一个关节，而JointDistance是用两个joint（这里的两个joint的表述并不正确，本质上是只有一个joint，但是在表现上是两个点）个一条线将两个body连接在一起，两个joint之间的连线呈现刚体特征。
+
+问题（重）：
+在cocos2dx 3.x自己封装的JointDistance里有这么三个函数：
+	float getDistance() const;
+	void setDistance(float distance);
+	virtual bool createConstraints() override;
+不知道其用法是什么。而且需要注意的是若没有调用createConstraints就调用getDistance和setDistance程序会崩溃，因为，在调用createConstraints之前，JointDistance的construct函数并不会创建用于保存distance的容器。而且就算生成容器之后再调用setDistance也不会改变JointDistance的两个joint之间的距离。所以这三个函数到底有什么用，还需要探究。
+
+
+4）JointLimit
+
+CPP中的描述：
+@brief A limit joint imposes a maximum distance between the two bodies, as if they were connected by a rope.
+
+其表现形式就想CPP中所说，像用一条没有弹性的绳子将两个物体连接在了一起。但是要注意的一点是其还有一个最小距离，若最小距离等于最大距离，其表现形式与JoinDistance相同。
+
+问题：
+cocos中JointLimit有两个construct函数：
+	static PhysicsJointLimit* construct(PhysicsBody* a, PhysicsBody* b, const Vec2& anchr1, const Vec2& anchr2);
+	static PhysicsJointLimit* construct(PhysicsBody* a, PhysicsBody* b, const Vec2& anchr1, const Vec2& anchr2, float min, float max);
+首先注意参数中的anchr都是算的距离anchorpoint的偏移。其次是在测试过程中第一个构造函数并没有正确的计算出两个body的anchorpoint之间的距离，导致出现了诡异的现象，不知道是为什么。需要注意的是尽量使用第二个构造函数来构造JointLimit
+
+
+5）JointSpring
+
+CPP中的描述：
+Connecting two physics bodies together with a spring.
+
+表现形式为两个物体被一根弹簧连接起来，弹簧可以被拉伸，也可以被压缩（目前测试的结论是两个body的anchor之间的初始长度为弹簧不拉伸也不压缩的长度）。
+
+
+6）JointGroove
+
+CPP中的描述：
+Attach body a to a line, and attach body b to a dot.
+
+表现形式是bodyA绑在一条线上，bodyB固定在一个点上，固定bodyB的点只能在bodyA绑定的线上运动。（目前想到的运用场景是将bodyA固定，bodyB可以模仿成在一个固定的槽里运动）
+
+注意：
+在构造函数
+	static PhysicsJointGroove* construct(PhysicsBody* a, PhysicsBody* b, const Vec2& grooveA, const Vec2& grooveB, const Vec2& anchr2);
+中，grooveA， grooveB均是相对于bodyA的anchorpoint的偏移，anchr2是相对于bodyB的anchorpoint的偏移。
+
+
+7）JointRotarySpring
+
+CPP中的描述：
+Likes a spring joint, but works with rotary.
+
+表现形式是当一个body旋转时，另一个body会因为弹力一起旋转（类似于钟表上发条）
+
+
+8）JointRotaryLimit
+
+CPP中的描述：
+Likes a limit joint, but works with rotary. 
+
+表现形式就是跟随旋转，同样需要注意最大值和最小值的问题，若最大值和最小值均为0，则是完全的跟随旋转。其他情况下最大值和最小值规定了跟随的偏差。
+
+
+9）JointRatchet
+
+CPP中的描述：
+Works like a socket wrench (socket wrench 套筒扳手)
+
+ratchet （棘轮：当主动件摇杆逆时针摆动时，驱动棘爪便插入棘轮的齿槽中，推动棘轮转过一个角度，此时，止动爪在棘轮的齿背上滑动。当主动件摇杆顺时针摆动时，止动爪阻止棘轮沿顺时针方向转动，而驱动棘爪却能够在棘轮齿背上滑过，故棘轮静止不动。这样，当摇杆作连续的往复摆动时，棘轮便作单向的间歇运动。其中，主动件的往复摆动可由摆动从动件凸轮机构、曲柄摇杆机构或由液压传动和电磁装置等得到。）
+其表现形式是跟设定的方向有关，bodyA朝与设定方向相反的方向旋转时，bodyB不旋转。bodyB同理。
+
+其构造函数如下：
+	static PhysicsJointRatchet* construct(PhysicsBody* a, PhysicsBody* b, float phase, float ratchet);
+参数描述如下：
+	@param phase Phase is the initial offset to use when deciding where the ratchet angles are.
+        @param ratchet Ratchet is the distance between "clicks".
+
+注意：
+当参数ratchet设置为0时，bodyA和bodyB之间的角度联系就不存在了，即不论二者怎么旋转，另一个都不会跟着转动。
+
+问题：
+本来参数ratchet应该是说bodyA每次需要转动多少角度才能够使bodyB进行转动。但是测试的结果表示其并不准确。目前还不知道是什么原因。
+
+
+10）JointGear
+
+CPP中的描述：
+Keeps the angular velocity ratio of a pair of bodies constant.
+
+其表现为齿轮。构造函数如下：
+	static PhysicsJointGear* construct(PhysicsBody* a, PhysicsBody* b, float phase, float ratio);
+其中参数phase表示的是两者的初始角度差（弧度表示）。参数ratio表示的是转动比率，即bodyA的转动圈数/bodyB的转动圈数=ratio。
+
+
+11）JointMotor
+
+CPP中的描述：
+Keeps the relative angular velocity of a pair of bodies constant.
+
+表现上感觉跟齿轮差不多，但是当点击固定住一个body的时候，另一个body并不会停止
