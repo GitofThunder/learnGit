@@ -1,6 +1,6 @@
 在年底自已做出一个横版的rpg游戏（包括服务器相关的东西也需要搭建）
 http://www.cocoachina.com/cocos/20140422/8215.html  三消类游戏的例子
-ihttp://blog.csdn.net/cbbbc/article/details/38435851  浅析schedule和回调函数
+http://blog.csdn.net/cbbbc/article/details/38435851  浅析schedule和回调函数
 http://www.cocoachina.com/bbs/read.php?tid-221969-keyword-%CE%EF%C0%ED%D2%FD%C7%E6.html  物理引擎简介，里面介绍的内容初级，但是实用
 
 问题：
@@ -13,3 +13,12 @@ http://blog.csdn.net/tspangle/article/details/38734147  一个很不错的fsm实
 看完之后发现，其实整个架构就是建立了一个更方便寻找状态，以及状态间转换的数据结构，之后由FSMclass来进行管理和状态切换
 
 http://blog.csdn.net/xtxy/article/details/9668221    堆栈式的状态机
+
+3）scrollview的实现机制
+http://www.tairan.com/archives/9958/  一个scrollview和tableview融合的例子比较有用，但是代码没有跑起来
+
+http://www.tuicool.com/articles/3aAnumv  一个游戏背包UI的实现方法（cocos2dx 2.2.0 还没有仔细看）
+
+
+4）物理引擎的关节机制
+5）物理引擎的小车游戏的搭建
