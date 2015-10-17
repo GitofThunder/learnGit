@@ -124,3 +124,8 @@ CPP中的描述：
 Keeps the relative angular velocity of a pair of bodies constant.
 
 表现上感觉跟齿轮差不多，但是当点击固定住一个body的时候，另一个body并不会停止
+
+
+需要尝试两个body能不能同时被绑定两个不同的joint（理论上应该是可以的）
+
+cocos自己封装的joint目前没有想到怎么做一个避震器。故而现在转向先学习box2d，看能否解决。
