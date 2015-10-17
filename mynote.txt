@@ -3,3 +3,5 @@ git学习的新网址：git-scm.com/book/zh/v2
 需要做的事：
 1）Bug分支只是看了，还没有实践，需要进行实践
 2）远程仓库的操作还需要实践。
+
+http://blog.csdn.net/bill_man/article/details/35839499  通过对cocos2d的源码阅读进行opengl的学习
