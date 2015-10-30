@@ -1,2 +1,56 @@
 box2d的学习笔记
 b2PrismaticJointDef：柱状关节，只允许朝一个方向移动，单筒望远镜是一个应用柱状关节的很好的例子（这个柱状关节貌似就是我想要的小车悬挂的关节之一）
+
+box2d的节点的概念好像是world创建body，创建body时需要bodyDef属性（是不是动态物体，位置等）；之后由body创建夹具fixture，形状只是夹具下的一个属性，fixture的其他属性还有density（密度），friction（摩擦系数），弹性等。
+
+
+box2d中的shapeedge中的幽灵碰撞和幽灵定点的概念根本没看懂！！
+
+
+http://ohcoder.com/blog/categories/box2d-tutorials/  一个比较不错的学习box2d的博客
+http://www.ladeng6666.com/blog/category/box2d/page/  一个不是cocos平台的box2d教程
+
+box2d会从物体定义中复制数据，并不会保存它的指针。这意味着你可以重复使用同一个物体定义去创建多个物体。
+
+应该在创建时就确定好物体的类型，因为以后要修改的话，代价会很高。而且物体类型是一定要设置的。
+
+注意，激活一个物体和重新创建一个物体的开销差不多。因此你不应该在流世界（streaming worlds）中使用激活，而应该用创建和销毁来节省内存。(译注：streaming worlds是指该世界中的大多数物体是动态创建的，而不是一开始就有的。)
+
+当你摧毁物体时，依附其上的fixture和joint都会自动被摧毁
+
+box2d中，使用SetTransform在body初始化之后设置body的位置。
+
+
+当设置密度的时候，物体的质量不会立即改变。你必须调用ResetMassData ，使之生效。
+fixture->SetDensity(5.0f);
+body->ResetMassData();
+
+关节：
+1）距离关节
+这个距离关节与cocos自己封装的固定关节有些不同，两个物体之间的距离不止可以表现为刚体性质，还可以选择是否是有弹性的。但即使是弹性的也只是保持在一个固定的距离，跟cocos自己封装的spring关节也不同。
+
+2）旋转关节
+旋转关节强制两个物体共享一个锚点。类似于cocos自己封装的JointPin
+旋转关节的另一种初始化方式（不调用Initialize函数）
+    b2RevoluteJointDef jointDef;
+    jointDef.bodyA = mybodyA;
+    jointDef.bodyB = mybodyB;
+    jointDef.localAnchorA = mybodyA->GetLocalPoint(mybodyB->GetPosition());
+    jointDef.localAnchorB = mybodyB->GetLocalPoint(mybodyB->GetPosition());
+    jointDef.referenceAngle = mybodyB->GetAngle() - mybodyA->GetAngle();
+    m_world->CreateJoint(&jointDef);
+这个方式创建的旋转关节的旋转节点由localAnchorA和localAnchorB决定。localAnchorA和localAnchorB指的是同一个点分别在bodyA和bodyB中的局部坐标。
+
+
+3）移动关节 prismaticjoint
+移动关节属性的初始化函数如下：
+void b2PrismaticJointDef::Initialize(b2Body* bA, b2Body* bB, const b2Vec2& anchor, const b2Vec2& axis)
+其中，axis是一个向量（世界坐标系），其代表移动关节的移动方向。
+
+由移动关节链接的物体不能再进行旋转了。（这是距离关节的特性）
+
+问题：
+在移动关节中设置马达时，力的正负出现了不同的现象，不知道正负代表什么。
+
+4）齿轮关节
+齿轮关节依赖于旋转关节和移动关节，齿轮关节总应该先于旋转或移动关节被删除。否则代码将会因访问齿轮关节的孤儿关节指针而导致崩溃，另外齿轮关节也应该在任何相关物体被删除之前删除。

@@ -22,3 +22,5 @@ http://www.tuicool.com/articles/3aAnumv  一个游戏背包UI的实现方法（c
 
 4）物理引擎的关节机制
 5）物理引擎的小车游戏的搭建
+
+oloroso  博客园
